@@ -5,32 +5,53 @@ import pandas as pd
 
 
 def procesar_todo():
-  # PASO 2: Lectura de CSV y XLSX en datos/
+  # PARTE 1: Buscar y leer los archivos en datos/
   archivos_csv = glob.glob('datos/sucursal_*.csv')
   archivos_xlsx = glob.glob('datos/sucursal_*.xlsx')
 
   lista_informes = []
 
+  # Carga de archivos CSV (comentario IA: lee cada reporte y lo añade a la lista)
   for archivo in archivos_csv:
-    lista_informes.append(pd.read_csv(archivo, encoding='utf-8'))
+    df = pd.read_csv(archivo, encoding='utf-8')
+    lista_informes.append(df)
 
+  # Carga de archivos Excel (comentario IA: lee reportes .xlsx)
   for archivo in archivos_xlsx:
-    lista_informes.append(pd.read_excel(archivo, engine='openpyxl'))
+    df = pd.read_excel(archivo, engine='openpyxl')
+    lista_informes.append(df)
 
   if not lista_informes:
     print("No se encontraron archivos en la carpeta 'datos/'.")
     return
 
-  # Consolidación y limpieza
+  # PARTE 3: Aplicación directa del template.py
+  # Identificamos el archivo con columnas distintas mediante su columna única
+  for i, df in enumerate(lista_informes):
+    if 'vendedor_nombre' in df.columns or 'valor_unitario' in df.columns:
+      lista_informes[i] = df.rename(
+          columns={
+              'vendedor_nombre': 'vendedor',
+              'valor_unitario': 'precio_unitario',
+          }
+      )
+
+  # Consolidación final (7 columnas exactas)
   df_consolidado = pd.concat(lista_informes, ignore_index=True)
+
+  # PARTE 4: Limpieza de duplicados y valores nulos
   df_consolidado = df_consolidado.drop_duplicates()
+  df_consolidado['vendedor'] = df_consolidado['vendedor'].fillna('Desconocido')
+  df_consolidado['precio_unitario'] = df_consolidado['precio_unitario'].fillna(
+      0
+  )
 
   os.makedirs('resultados', exist_ok=True)
 
-  # Guardar Excel consolidado
+  # PARTE 5: Guardar consolidado
   df_consolidado.to_excel('resultados/consolidado_limpio.xlsx', index=False)
 
-  # Gráfico 1: Ventas por Categoría
+  # Generación de reportes y gráficos
   ventas_categoria = df_consolidado.groupby('categoria')['precio_unitario'].sum()
   plt.figure(figsize=(8, 5))
   ventas_categoria.plot(kind='bar', title='Ventas por Categoría')
@@ -40,7 +61,6 @@ def procesar_todo():
   plt.savefig('resultados/grafico_categoria.png')
   plt.close()
 
-  # Gráfico 2: Ventas por Vendedor
   ventas_vendedor = df_consolidado.groupby('vendedor')['precio_unitario'].sum()
   plt.figure(figsize=(8, 5))
   ventas_vendedor.plot(kind='bar', color='orange', title='Ventas por Vendedor')
@@ -50,34 +70,7 @@ def procesar_todo():
   plt.savefig('resultados/grafico_vendedor.png')
   plt.close()
 
-  # PASO 4: Análisis de métricas (Producto más vendido)
-  total_ventas = df_consolidado['precio_unitario'].sum()
-  categoria_top = (
-      df_consolidado.groupby('categoria')['precio_unitario'].sum().idxmax()
-  )
-  vendedor_top = (
-      df_consolidado.groupby('vendedor')['precio_unitario'].sum().idxmax()
-  )
-  producto_top = df_consolidado['producto'].value_counts().idxmax()
-  promedio_transaccion = df_consolidado['precio_unitario'].mean()
-
-  print('=' * 40)
-  print('  PROCESAMIENTO COMPLETADO')
-  print(f'  Total Ventas: ${total_ventas:,.0f}')
-  print(f'  Producto más vendido: {producto_top}')
-  print('=' * 40)
-
-  # Guardar Resumen Ejecutivo
-  with open('resultados/resumen_ejecutivo.txt', 'w', encoding='utf-8') as f:
-    f.write('RESUMEN EJECUTIVO - BOT DE VENTAS\n')
-    f.write(f'Fecha: {pd.Timestamp.now()}\n\n')
-    f.write(f'Categoría con mejor desempeño: {categoria_top}\n')
-    f.write(f'Vendedor con más ventas: {vendedor_top}\n')
-    f.write(f'Producto más vendido: {producto_top}\n')
-    f.write(
-        f'Promedio de venta por transacción: ${promedio_transaccion:,.2f}\n'
-    )
-    f.write(f'Total de ventas acumuladas: ${total_ventas:,.0f}\n')
+  print('Procesamiento correcto con plantilla integrada.')
 
 
 if __name__ == '__main__':
