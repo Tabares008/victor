@@ -1,8 +1,8 @@
-RESUMEN EJECUTIVO - Bot de Ventas
-Fecha: 2026-09-17 14:15:09.304574
+RESUMEN EJECUTIVO - BOT DE VENTAS
+Fecha: 2026-09-17 14:27:34.889889
 
-Categoria con mejor desempeño: Helados
-Vendedor con mas ventas: Elena
-Producto mas vendido: Cono Vainilla
-Promedio de venta por transaccion: $8,666.67
+Categoría con mejor desempeño: Helados
+Vendedor con más ventas: Elena
+Producto más vendido: Cono Vainilla
+Promedio de venta por transacción: $8,666.67
 Total de ventas acumuladas: $104,000
