@@ -1,15 +1,13 @@
-# Reporte de Automatización y Análisis de Negocio
+# Bot de Ventas - Análisis y Consolidación de Sucursales
 
-## Métricas Principales de Negocio
-* **Categoría con mejor desempeño:** [Categoría de tu resumen_ejecutivo.txt]
-* **Vendedor con más ventas:** [Vendedor de tu resumen_ejecutivo.txt]
-* **Producto más vendido:** [Producto de tu resumen_ejecutivo.txt]
-* **Promedio de venta por transacción:** [Promedio de tu resumen_ejecutivo.txt]
+## Resumen Ejecutivo de Resultados
+* **Total de ventas acumuladas:** $104,000 COP
+* **Categoría con mejor desempeño:** Helados
+* **Vendedor con más ventas:** Elena
+* **Producto más vendido:** Cono Vainilla
+* **Promedio por transacción:** $8,666.67 COP
 
-## Conclusión
-La consolidación automática de datos de las sucursales procesa grandes volúmenes de ventas en segundos, generando reportes financieros limpios y unificados sin intervención manual.
-
-## Reflexión Final
-Si fuera el dueño de este negocio, **sí confiaría en este sistema automático**, ya que reduce drásticamente los errores humanos de digitación y acelera la toma de decisiones.
-
-Sin embargo, implementaría validaciones previas en el script para asegurar que los CSV no tengan filas con datos faltantes o precios incorrectos antes de consolidar.
+## Visualizaciones
+Los gráficos con la distribución del rendimiento por categoría y por vendedor se encuentran en `resultados/`:
+* `resultados/grafico_categoria.png`
+* `resultados/grafico_vendedor.png`
